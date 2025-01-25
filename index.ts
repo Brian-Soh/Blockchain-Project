@@ -52,7 +52,7 @@ class Chain {
         let transaction = newBlock.transaction.toString();
         while(true) {
             const hash = crypto.createHash('MD5');
-            hash.update((transaction + solution).toString()).end();
+            hash.update((transaction + newBlock.prevHash + solution).toString()).end();
 
             const attempt = hash.digest('hex');
 
@@ -83,13 +83,12 @@ class Chain {
     verify() {
         for (let i = 1; i < this.chain.length; i++) {
             const currentBlock = this.chain[i];
-            const previousBlock = this.chain[i - 1];
             const transaction = currentBlock.transaction.toString();
             const hash = crypto.createHash('MD5');
-            hash.update((transaction + currentBlock.nonce).toString()).end();
+            hash.update((transaction + currentBlock.prevHash + currentBlock.nonce).toString()).end();
             const attempt = hash.digest('hex');
             if (attempt.substring(0, 4) !== '0000') {
-                console.log('Chain Valid: True') ;
+                console.log('Chain Valid: False') ;
                 return;
             }
         }
