@@ -27,6 +27,9 @@ class Block {
         hash.update(str).end();
         return hash.digest('hex');
     }
+    toString() {
+        return JSON.stringify(this);
+    }
 }
 
 class Chain {
@@ -77,6 +80,8 @@ class Chain {
             this.chain.push(newBlock);
             this.userBalances[transaction.payer] -= transaction.amount;
             this.userBalances[transaction.payee] += transaction.amount;
+        } else {
+            console.log('Invalid Transaction');
         }
     }
 
@@ -95,6 +100,19 @@ class Chain {
         console.log('Chain Valid: True') ;
         console.log(Chain.instance);
         return;
+    }
+
+    toString () {
+        return {
+            chain: this.chain.map(block => ({
+                prevHash: block.prevHash,
+                transaction: block.transaction,
+                ts: block.ts,
+                nonce: block.nonce,
+                hash: block.Hash,
+            })),
+            userBalances: this.userBalances,
+        };
     }
 }
 
@@ -134,5 +152,4 @@ UBC.sendMoney(50, McGill);
 McGill.sendMoney(23, UofT);
 UofT.sendMoney(30, UBC);
 
-Chain.instance.verify();
-
+console.log(JSON.stringify(Chain.instance, null, 2));
