@@ -98,7 +98,7 @@ class Chain {
             }
         }
         console.log('Chain Valid: True') ;
-        console.log(Chain.instance);
+        console.log(JSON.stringify(Chain.instance, null, 2));
         return;
     }
 
@@ -152,4 +152,4 @@ UBC.sendMoney(50, McGill);
 McGill.sendMoney(23, UofT);
 UofT.sendMoney(30, UBC);
 
-console.log(JSON.stringify(Chain.instance, null, 2));
+Chain.instance.verify();
