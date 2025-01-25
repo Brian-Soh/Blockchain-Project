@@ -4,13 +4,13 @@
 My first encounter with Bitcoin was in Grade 7 when it amassed media coverage due to its price peaking at $21k before dropping below $7k which caused panic among crypto enthusiasts. My best friend and I took advantage of that opportunity to buy it at a low price and began mining for it on my desktop. At the time, "mining" and "hashes" were just buzzwords to me, but this project gave me the opportunity to explore the implementation of blockchain technology and the theory behind cryptographic signatures and proof of work. This project uses the Crypto node module to create and digest hashes as well as verify signatures. 
 
 ## Classes
-** Transaction **
+**Transaction**
 - Keeps track of the amount, payer and payee of each transaction
 
-** Block **
+**Block**
 - Has a nonce which is the solution which generates a hash that starts with 4 zeroes when appended to the transaction and the previous hash
 
-** Chain **
+**Chain**
 - Follows the Singleton design pattern so there is only one instance 
 - userBalances is hash map which keeps track of all accounts
 - Initialization creates a "Genesis" block which signifies the start of the chain
@@ -19,7 +19,7 @@ My first encounter with Bitcoin was in Grade 7 when it amassed media coverage du
 - addBlock is in charge of verifying each transaction by ensuring that the signature provided by the sender matches the transaction. This then verifies that the sender has sufficient funds before appending the block and transferring the amount.
 - verify loops through the Blocks in the Chain and verifies each hash solution
 
-** Wallet **
+**Wallet**
 - has a publicKey which acts as a username and a privateKey which is used to create a signature
 - sendMoney is the only function it has access to, but the block chain verifies if the transaction is valid
 
