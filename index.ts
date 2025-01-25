@@ -13,7 +13,7 @@ class Transaction {
 
 class Block {
 
-    public nonce = Math.round(Math.random() * 999999999);
+    public nonce = 0;
     
     constructor(
         public prevHash: string,
@@ -36,26 +36,30 @@ class Chain {
 
     constructor() {
         this.chain = [new Block('null', new Transaction(100, 'genesis', 'bitcoin'))] // genesis block to signify the creation of a new Chain
-        
     }
 
     get lastBlock() {
         return this.chain[this.chain.length - 1];
     }
 
-    mine(nonce: number) {
+    addMember(publicKey: string, balance: number) {
+        this.userBalances[publicKey] = balance;
+    }
+
+    mine(newBlock: Block) {
         let solution = 1;
         console.log('Mining Block...');
-
+        let transaction = newBlock.transaction.toString();
         while(true) {
             const hash = crypto.createHash('MD5');
-            hash.update((nonce + solution).toString()).end();
+            hash.update((transaction + solution).toString()).end();
 
             const attempt = hash.digest('hex');
 
             if (attempt.substring(0, 4) === '0000') {
                 console.log(`Solved: ${solution}`);
-                return solution;
+                newBlock.nonce = solution;
+                return;
             }
             solution += 1;
         }
@@ -69,15 +73,29 @@ class Chain {
         const hasBalance = this.userBalances[transaction.payer] >= transaction.amount;
         if (isValid && hasBalance) {
             const newBlock = new Block(this.lastBlock.Hash, transaction);
-            this.mine(newBlock.nonce);
+            this.mine(newBlock);
             this.chain.push(newBlock);
             this.userBalances[transaction.payer] -= transaction.amount;
             this.userBalances[transaction.payee] += transaction.amount;
         }
     }
 
-    addMember(publicKey: string, balance: number) {
-        this.userBalances[publicKey] = balance;
+    verify() {
+        for (let i = 1; i < this.chain.length; i++) {
+            const currentBlock = this.chain[i];
+            const previousBlock = this.chain[i - 1];
+            const transaction = currentBlock.transaction.toString();
+            const hash = crypto.createHash('MD5');
+            hash.update((transaction + currentBlock.nonce).toString()).end();
+            const attempt = hash.digest('hex');
+            if (attempt.substring(0, 4) !== '0000') {
+                console.log('Chain Valid: True') ;
+                return;
+            }
+        }
+        console.log('Chain Valid: True') ;
+        console.log(Chain.instance);
+        return;
     }
 }
 
@@ -117,4 +135,5 @@ UBC.sendMoney(50, McGill);
 McGill.sendMoney(23, UofT);
 UofT.sendMoney(30, UBC);
 
-console.log(Chain.instance);
+Chain.instance.verify();
+
