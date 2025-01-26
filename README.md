@@ -28,3 +28,7 @@ I have provided an example which includes the creation of 3 new wallets: UBC, Mc
 
 ## Potential Improvement
 Rather than keeping the balances in the Chain class, I could instead keep each Wallet's balance in the class itself which gives it access to giving itself money. This would creates a discrepancy between the Wallet and the Chain which causes the verify function to fail, mirroring the reality of block chains like Bitcoin. 
+
+## Sources
+- https://www.youtube.com/watch?v=bBC-nXj3Ng4&list=WL&index=2&ab_channel=3Blue1Brown
+- https://www.youtube.com/watch?v=qF7dkrce-mQ&t=2s&ab_channel=Fireship
